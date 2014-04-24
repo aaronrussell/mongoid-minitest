@@ -16,7 +16,7 @@ module Mongoid
 
       def matches? subject
         @klass = class_of subject
-        klass.index_options.any? { |idx, _| idx.keys == attrs }
+        (@attrs - indexes).empty?
       end
 
       def failure_message
@@ -34,7 +34,7 @@ module Mongoid
       private
 
       def indexes
-        klass.index_options.keys.map(&:keys)
+        klass.index_specifications.map { |i| i.key.keys }.flatten
       end
     end
   end
